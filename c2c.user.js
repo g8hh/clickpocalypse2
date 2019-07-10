@@ -13,10 +13,11 @@ var scrollReserve = 15;
 
 // This will fire scrolls no matter what, if we hit this limit... (so we can pick up new scrolls).
 var scrollUpperBound = 29;
+var GM_info ='';
 
 $(document).ready(function () {
 
-	console.log('Starting Clickpocalypse2Clicker: ' + GM_info.script.version);
+//	console.log('Starting Clickpocalypse2Clicker: ' + GM_info.script.version);
 
 	setInterval(function () {
 
