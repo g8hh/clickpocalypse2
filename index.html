@@ -435,6 +435,10 @@
                         <div id="importCloseButton" class="saveButton" style="margin-top:5px; margin-left:5px; float:left;">取消</div>
                     </div>
                 </div>
+                                <div class="saveButtonContainer">
+                    <div id="loadJB" class="saveButton">自动脚本</div>
+                </div>
+
             </div>
 
             <div id="statisticsContainer" class="infoTabStatisticsContainer"></div>
@@ -898,14 +902,27 @@
 </div>
 
 <script src="c2.js?ver=20150918"></script>
-
+<!--客服 开始-->
+<script src="https://cdn.jsdelivr.net/gh/g8hh/g8hh.github.io/static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/g8hh/g8hh.github.io/static/css/kf.css" type="text/css" media="screen" charset="utf-8">
+<script src="https://cdn.jsdelivr.net/gh/g8hh/g8hh.github.io/static/js/kf.js"></script>
+<!-- 客服 结束 -->
 <!-- Start up the game when the page loads. -->
 <script type="text/javascript">
     // Initialize things when the window has finished loading.
     window.onload = function () {
         Game.onLoad(document);
     };
-</script>
+        $("#loadJB").click(function() {
+    console.log("脚本已启用")
+        $("#loadJB").remove()
+    document.body.appendChild(document.createElement('script')).src = 'c2c.user.js';
+    });
 
+</script>
+<!--站长统计-->
+    <div style="display: none">
+        <script type="text/javascript" src="//s19.cnzz.com/z_stat.php?id=1267958737&web_id=1267958737"></script>
+    </div>
 </body>
 </html>
