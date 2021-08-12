@@ -25372,11 +25372,11 @@ az.prototype.J = function() {
         c = a.insertCell(6);
         c.id = this.Kq;
         c.className = "gameTabAdventurerInfoHpAc";
-        c.title = "攻击等级:提高命中率";
+        c.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
         this.pk = a.insertCell(7);
         this.pk.style.width = "30px";
         this.pk.style.textAlign = "left";
-        this.pk.title = "攻击等级:提高命中率";
+        this.pk.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
         this.pk.innerHTML = "攻击";
         d = 8;
         for (c = 0; c < this.Wl.length; c++) b = a.insertCell(d++),
@@ -25415,11 +25415,11 @@ az.prototype.J = function() {
         c = a.insertCell(5);
         c.id = this.Mq;
         c.className = "gameTabAdventurerInfoHpAc";
-        c.title = "防御等级:提高躲避几率";
+        c.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
         this.Ak = a.insertCell(6);
         this.Ak.style.width = "30px";
         this.Ak.style.textAlign = "left";
-        this.Ak.title = "防御等级:提高躲避几率";
+        this.Ak.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
         this.Ak.innerHTML = "防御"
     }
 };
