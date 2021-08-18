@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <link rel="icon"
+          type="image/x-icon"
+          href="favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="description" content="A free, mostly idle RPG" />
+    <meta name="keywords" content="html5,game,gaming,games,play,rpg,idle" />
+    <title>末日危机2</title>
+    <link rel="stylesheet" type="text/css" href="c2.css?ver=20150726">
+
+</head>
+<body>
+
+<!-- Game is 1024x768, center aligned. -->
+<div class="gameContainer" id="gameContainer">
+    <div class="tabMenu" id="gameTabMenu"></div>
+    <div class="gameTitleContainer">末日危机2</div>
+    <div class="pauseButtonContainer">
+        <div id="pauseButton" class="upgradeButton">暂停</div>
+    </div>
+
+    <div class="tabContent mainTabContainer">
+        <div id="partyCreationTabContent" class="tabContainer"></div>
+
+        <div id="gameOverTabContent" class="tabContainer" style="display:none;"></div>
+        <div id="offlineTabContent" class="tabContainer" style="display:none;"></div>
+
+        <!-- The contents of the 'game' tab -->
+        <div id="gameTabContent" class="tabContainer" style="display:none;">
+            <!-- The encounter notification panel-->
+            <div id="dungeonNotificationPanel" class="dungeonNotificationPanel"></div>
+            <!-- The encounter notification panel-->
+            <div id="encounterNotificationPanel" class="encounterNotificationPanel"></div>
+
+            <!-- Right Panel -->
+            <div id="rightPanel" class="gameTabRightPanel">
+                <div id="currencyPanel" class="gameTabRightCurrencyPanel">
+                    <table style="width:100%;">
+                        <tr>
+                            <td id="goldAmountCell" style="text-align:right;width:60px;">0</td>
+                            <td style="width:30px; text-align:left;background: url('spritesheet/items.png') -1464px -73px;height:22px;">
+                                <img src="images/Transparent.gif" title="黄金" style="width:100%;height:15px;"/>
+                            </td>
+
+                            <td id="killsCountCell" style="text-align:right;width:60px;">0</td>
+                            <td style="width:30px; text-align:left;background: url('spritesheet/terrain.png') -1302px -363px;height:22px;">
+                                <img src="images/Transparent.gif" title="杀戮" style="width:100%;height:15px;"/>
+                            </td>
+
+                            <td id="expCell" style="text-align:right;;width:60px;vertical-align: middle;">0</td>
+                            <td style="width:30px; text-align:left;height:15px;vertical-align: middle;">XP</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="adventurePointsPanel" class="gameTabRightAdventurePointsPanel"></div>
+                <div id="upgradeButtonContainer" class="gameTabRightPanelUpgradeButtonContainer"></div>
+            </div>
+
+            <div id="bottomPanel" class="gameTabBottomPanel">
+                <div id="gameTabAdventurerInfo0" class="gameTabAdventurerInfo" style="top:0;left:0;"></div>
+                <div id="gameTabAdventurerInfo1" class="gameTabAdventurerInfo" style="top:37px;left:0;"></div>
+                <div id="gameTabAdventurerInfo2" class="gameTabAdventurerInfo" style="top:74px;left:0;"></div>
+                <div id="gameTabAdventurerInfo3" class="gameTabAdventurerInfo" style="top:111px;left:0;"></div>
+                <div id="gameTabAdventurerInfo4" class="gameTabAdventurerInfo" style="top:148px;left:0;"></div>
+            </div>
+
+            <!-- Treasure chest Loot button panel. -->
+            <div id="treasureChestLootButtonPanel" class="gameTabLootButtonPanel"></div>
+            <div id="scrollButtonContainer" class="gameTabScrollButtonContainer"></div>
+            <div id="potionButtonContainer" class="gameTabPotionPanel"></div>
+        </div>
+
+        <!-- The contents of the 'monsters' tab -->
+        <div id="monstersTabContent" class="tabContainer" style="display:none;">
+            <!-- Display the kill count at the top of the tab. -->
+            <div id="monsterKillCountContainer" class="monsterKillCountDiv centeredElement">
+                <table style="width:100%;">
+                    <tr>
+                        <td id="killCountPanel" style="text-align:right;">0</td>
+                        <td style="width:30px; text-align:left;background: url('spritesheet/terrain.png') -1302px -363px;height:22px;">
+                            <img src="images/Transparent.gif" title="Kills" style="width:100%;height:15px;"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="monsterUpgradesHeaderContainer">
+                <div class="monsterUpgradesHeaderSpan">升级怪物</div>
+            </div>
+            <div id="monsterUpgradesContainer" class="monsterUpgradesContainer">
+                <div id="monsterUpgradeButtonsContainer" class="monsterUpgradeButtonsContainer"></div>
+
+                <table class="monsterUpgradeValuesContainer" >
+                    <tr>
+                        <th class="upgradeName">升级</th>
+                        <th class="upgradeValue">数值</th>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪黄金掉落几率</td>
+                        <td id="goldDropChance" class="upgradeValue">0.5%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次最多掉落黄金数量</td>
+                        <td id="maxGoldPerDrop" class="upgradeValue">20 g</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次最少掉落黄金数量</td>
+                        <td id="minGoldPerDrop" class="upgradeValue">0 g</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪道具掉落几率</td>
+                        <td id="itemDropChance" class="upgradeValue">0.9%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪卷轴掉落几率</td>
+                        <td id="scrollDropChance" class="upgradeValue">0.9%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪药剂掉落几率</td>
+                        <td id="potionDropChance" class="upgradeValue">0.1%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">更高等级道具掉落几率</td>
+                        <td id="itemLevelBonus" class="upgradeValue">10%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">更加稀有道具掉落几率</td>
+                        <td id="itemRarityChance" class="upgradeValue">5%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">遇到财宝箱几率</td>
+                        <td id="treasureChestChance" class="upgradeValue">5%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">房间内最多怪物数量</td>
+                        <td id="maxMonstersPerRoom" class="upgradeValue">25</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">房间内最少怪物数量</td>
+                        <td id="minMonstersPerRoom" class="upgradeValue">0</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="monstersTabContainer">
+                <div id="monsterTabMenu" class="tabMenu"></div>
+                <div id="monsterTabContainerParent" class="tabContent borderedContainer"></div>
+            </div>
+        </div>
+
+        <div id="characterTabContent0" class="tabContainer" style="display:none;">
+            <div id="characterLevelUpButtonContainer0" class="characterLevelUpContainer"></div>
+
+            <div class="characteristicsHeaderContainer">
+                <div class="characteristicsHeaderSpan">角色属性</div>
+            </div>
+            <div id="characterPropertiesContainer0" class="characterPropertiesContainer scrollingContainer"></div>
+
+            <div id="characterTabContainer0" class="characterTabContainer">
+                <div id="characterTabMenu0" class="tabMenu"></div>
+                <div class="tabContent borderedContainer">
+                    <div id="characterSkillsContainer0" class="tabContainer scrollingContainer"></div>
+                    <div id="characterInventoryContainer0" class="tabContainer" style="display:none;">
+                        <!-- Equipped Items -->
+                        <div class="inventoryTabEquippedItemsHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">已装备道具</div>
+                        </div>
+                        <div id="adventurerEquippedItems0" class="inventoryTabEquippedItems"></div>
+
+                        <div id="equipAllButtonContainer0" class="equipAllButtonContainer">
+                            <div id="equipImprovements0" class="disabledUpgradeButton">穿戴更好装备</div>
+                        </div>
+
+                        <!-- Inventory -->
+                        <div class="inventoryTabInventoryHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">背包</div>
+                        </div>
+                        <div id="itemTableAdventurer0" class="inventoryTabInventoryList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="characterTabContent1" class="tabContainer" style="display:none;">
+            <div id="characterLevelUpButtonContainer1" class="characterLevelUpContainer"></div>
+
+            <div class="characteristicsHeaderContainer">
+                <div class="characteristicsHeaderSpan">角色属性</div>
+            </div>
+            <div id="characterPropertiesContainer1" class="characterPropertiesContainer scrollingContainer"></div>
+
+            <div id="characterTabContainer1" class="characterTabContainer">
+                <div id="characterTabMenu1" class="tabMenu"></div>
+                <div class="tabContent borderedContainer">
+                    <div id="characterSkillsContainer1" class="tabContainer scrollingContainer"></div>
+                    <div id="characterInventoryContainer1" class="tabContainer" style="display:none;">
+                        <!-- Equipped Items -->
+                        <div class="inventoryTabEquippedItemsHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">已装备道具</div>
+                        </div>
+                        <div id="adventurerEquippedItems1" class="inventoryTabEquippedItems"></div>
+
+                        <div id="equipAllButtonContainer1" class="equipAllButtonContainer">
+                            <div id="equipImprovements1" class="disabledUpgradeButton">穿戴更好装备</div>
+                        </div>
+
+                        <!-- Inventory -->
+                        <div class="inventoryTabInventoryHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">背包</div>
+                        </div>
+                        <div id="itemTableAdventurer1" class="inventoryTabInventoryList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="characterTabContent2" class="tabContainer" style="display:none;">
+            <div id="characterLevelUpButtonContainer2" class="characterLevelUpContainer"></div>
+
+            <div class="characteristicsHeaderContainer">
+                <div class="characteristicsHeaderSpan">角色属性</div>
+            </div>
+            <div id="characterPropertiesContainer2" class="characterPropertiesContainer scrollingContainer"></div>
+
+            <div id="characterTabContainer2" class="characterTabContainer">
+                <div id="characterTabMenu2" class="tabMenu"></div>
+                <div class="tabContent borderedContainer">
+                    <div id="characterSkillsContainer2" class="tabContainer scrollingContainer"></div>
+                    <div id="characterInventoryContainer2" class="tabContainer" style="display:none;">
+                        <!-- Equipped Items -->
+                        <div class="inventoryTabEquippedItemsHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">已装备道具</div>
+                        </div>
+                        <div id="adventurerEquippedItems2" class="inventoryTabEquippedItems"></div>
+
+                        <div id="equipAllButtonContainer2" class="equipAllButtonContainer">
+                            <div id="equipImprovements2" class="disabledUpgradeButton">穿戴更好装备</div>
+                        </div>
+
+                        <div class="inventoryTabInventoryHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">背包</div>
+                        </div>
+                        <div id="itemTableAdventurer2" class="inventoryTabInventoryList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="characterTabContent3" class="tabContainer" style="display:none;">
+            <div id="characterLevelUpButtonContainer3" class="characterLevelUpContainer"></div>
+
+            <div class="characteristicsHeaderContainer">
+                <div class="characteristicsHeaderSpan">角色属性</div>
+            </div>
+            <div id="characterPropertiesContainer3" class="characterPropertiesContainer scrollingContainer"></div>
+
+            <div id="characterTabContainer3" class="characterTabContainer">
+                <div id="characterTabMenu3" class="tabMenu"></div>
+                <div class="tabContent borderedContainer">
+                    <div id="characterSkillsContainer3" class="tabContainer scrollingContainer"></div>
+                    <div id="characterInventoryContainer3" class="tabContainer" style="display:none;">
+                        <!-- Equipped Items -->
+                        <div class="inventoryTabEquippedItemsHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">已装备道具</div>
+                        </div>
+                        <div id="adventurerEquippedItems3" class="inventoryTabEquippedItems"></div>
+
+                        <div id="equipAllButtonContainer3" class="equipAllButtonContainer">
+                            <div id="equipImprovements3" class="disabledUpgradeButton">穿戴更好装备</div>
+                        </div>
+
+                        <!-- Inventory -->
+                        <div class="inventoryTabInventoryHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">背包</div>
+                        </div>
+                        <div id="itemTableAdventurer3" class="inventoryTabInventoryList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="characterTabContent4" class="tabContainer" style="display:none;">
+            <div id="characterLevelUpButtonContainer4" class="characterLevelUpContainer"></div>
+
+            <div class="characteristicsHeaderContainer">
+                <div class="characteristicsHeaderSpan">角色属性</div>
+            </div>
+            <div id="characterPropertiesContainer4" class="characterPropertiesContainer scrollingContainer"></div>
+
+            <div id="characterTabContainer4" class="characterTabContainer">
+                <div id="characterTabMenu4" class="tabMenu"></div>
+                <div class="tabContent borderedContainer">
+                    <div id="characterSkillsContainer4" class="tabContainer scrollingContainer"></div>
+                    <div id="characterInventoryContainer4" class="tabContainer" style="display:none;">
+                        <!-- Equipped Items -->
+                        <div class="inventoryTabEquippedItemsHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">已装备道具</div>
+                        </div>
+                        <div id="adventurerEquippedItems4" class="inventoryTabEquippedItems"></div>
+
+                        <div id="equipAllButtonContainer4" class="equipAllButtonContainer">
+                            <div id="equipImprovements4" class="disabledUpgradeButton">穿戴更好装备</div>
+                        </div>
+
+                        <!-- Inventory -->
+                        <div class="inventoryTabInventoryHeaderContainer">
+                            <div class="monsterUpgradesHeaderSpan">背包</div>
+                        </div>
+                        <div id="itemTableAdventurer4" class="inventoryTabInventoryList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The contents of the 'dungeons' tab -->
+        <div id="dungeonsTabContent" class="tabContainer" style="display:none;">
+            <!-- Display the experience points at the top of the tab. -->
+            <div id="goldContainer" class="partyExperiencePointsDiv centeredElement">
+                <table style="width:100%;">
+                    <tr>
+                        <td id="partyGoldPanel" style="text-align:right;">0</td>
+                        <td style="width:30px; text-align:left;background: url('spritesheet/items.png') -1464px -73px;height:22px;">
+                            <img src="images/Transparent.gif" title="Gold" style="width:100%;height:15px;"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="dungeonsTabContainer" class="dungeonTabContainer">
+                <div id="dungeonTabMenu" class="tabMenu"></div>
+                <div class="tabContent borderedContainer">
+                    <div id="discoveredDungeonsTableContainer" class="tabContainer scrollingContainer"></div>
+                    <div id="infestedDungeonsTableContainer" class="tabContainer scrollingContainer" style="display:none;"></div>
+                    <div id="clearedDungeonsTableContainer" class="tabContainer scrollingContainer" style="display:none;"></div>
+                    <div id="pendingFarmsContainer" class="tabContainer scrollingContainer" style="display:none;"></div>
+                    <div id="farmedDungeonsTableContainer" class="tabContainer scrollingContainer" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The contents of the 'castles' tab -->
+        <div id="castlesTabContent" class="tabContainer" style="display:none;">
+            <div id="castleTableContainer" class="castleTable"></div>
+            <div id="castleMapContainer" class="castleMap"></div>
+        </div>
+
+        <!-- The contents of the 'points' tab -->
+        <div id="pointsTabContent" class="tabContainer" style="display:none;">
+            <div id="achievementsTabAdventurePointsPanel" class="adventurePointsDiv centeredElement"></div>
+
+            <div class="pointsBreakdownHeaderContainer">
+                <div class="pointsBreakdownHeaderSpan">点数分析</div>
+            </div>
+            <div id="pointsBreakdownContainer" class="pointsBreakdownContainer"></div>
+
+            <div class="pointUpgradesHeaderContainer">
+                <div class="pointUpgradesHeaderSpan">点数升级</div>
+            </div>
+            <div id="pointUpgradesContainer" class="pointUpgradesContainer"></div>
+
+            <!--<div id="castleTableContainer" class="castleTable"></div>-->
+            <div class="achievementsHeaderContainer">
+                <div id="achievementsHeaderSpan" class="achievementsHeaderSpan">成就</div>
+            </div>
+            <div id="achievementsContainer" class="achievementsContainer"></div>
+        </div>
+
+        <!-- The contents of the 'info' tab -->
+        <div id="infoTabContent" class="tabContainer" style="display:none;">
+            <div id="infoTabSaveLoadContainer" class="infoTabSaveLoadContainer">
+                <div class="sectionTitle">存档</div>
+
+                <div class="saveButtonContainer">
+                    <div id="saveButton" class="saveButton" style="float:left;"
+                         title="Saves your current progress. This happens automatically.">保存游戏</div>
+
+                    <div id="lastSaveDiv" class="buttonNoteDiv">最后保存于: 从未</div>
+                </div>
+
+                <div id="firstResetButtonContainer" class="saveButtonContainer">
+                    <div id="firstResetButton" class="saveButton" style="float:left;"
+                         title="Starts the game over completely. No bonuses. Level 1 with no gold.">重置游戏</div>
+
+                    <div class="buttonNoteDiv">从头开始游戏(这不会删除'重生'数据).</div>
+                </div>
+                <div id="resetConfirmContainer" class="exportImportSaveContainer" style="margin-bottom:5px;">
+                    <div>你确定要清除所有进度重新开始?</div>
+                    <div>注意:这不会删除'重生'数据(如果有这个功能).</div>
+
+                    <div id="realResetButton" class="saveButton" style="margin-top:5px; float:left;"
+                         title="Starts the game over completely. No bonuses. Level 1 with no gold.">重置游戏</div>
+
+                    <div id="cancelResetButton" class="saveButton" style="margin-top:5px; margin-left:5px; float:left;" >取消</div>
+                </div>
+
+                <div id="firstDeleteSaveButtonContainer" class="saveButtonContainer">
+                    <div id="firstDeleteButton" class="saveButton" style="float:left;"
+                         title="This will completely wipe out all of your progress and start you over from the beginning.">删除存档</div>
+
+                    <div class="buttonNoteDiv">清除所有进度,包括'重生'数据.</div>
+                </div>
+                <div id="deleteSaveConfirmContainer" class="exportImportSaveContainer" style="margin-bottom:5px;">
+                    <div>这将清除包括重生在内的所有数据.</div>
+                    <div style="font-weight:bold;">进行这个操作前,推荐您先导出存档进行备份.</div>
+
+                    <div id="realDeleteButton" class="saveButton" style="margin-top:5px; float:left;"
+                         title="Starts the game over completely.">删除存档</div>
+
+                    <div id="cancelDeleteButton" class="saveButton" style="margin-top:5px; margin-left:5px; float:left;">取消</div>
+                </div>
+
+                <div class="saveButtonContainer">
+                    <div id="exportSaveButton" class="saveButton" title="Lets you copy your progress to the clipboard.">导出存档</div>
+                </div>
+                <div id="exportSaveContainer" class="exportImportSaveContainer">
+                    <label for="exportSaveInput">复制/黏贴来导出:</label>
+                    <input id="exportSaveInput" style="width:450px;margin-top:5px;" type="text">
+
+                    <div id="cancelExportButton" class="saveButton" style="margin-top:5px;">取消</div>
+                </div>
+
+                <div class="saveButtonContainer">
+                    <div id="importSaveButton" class="saveButton">导入存档</div>
+                </div>
+                <div id="importSaveContainer" class="exportImportSaveContainer">
+                    <label for="importSaveInput">黏贴之前导出的存档来导入:</label>
+                    <input id="importSaveInput" style="width:450px;margin-top:5px;" type="text">
+
+                    <div id="importErrorMessage" style="font-weight:bold; color:red; display:none;">错误:无效的存档数据.</div>
+                    <div id="importSuccessMessage" style="font-weight:bold; color:green; display:none;">成功导入存档.</div>
+                    <div>
+                        <div id="importOkButton" class="saveButton" style="margin-top:5px; float:left;">导入</div>
+                        <div id="importCloseButton" class="saveButton" style="margin-top:5px; margin-left:5px; float:left;">取消</div>
+                    </div>
+                </div>
+                                <div class="saveButtonContainer">
+                    <div id="loadJB" class="saveButton">自动脚本</div>
+                </div>
+
+            </div>
+
+            <div id="statisticsContainer" class="infoTabStatisticsContainer"></div>
+
+            <div id="recentChanges" class="infoTabRecentChanges">
+                <div class="sectionTitle" style="margin-bottom:5px;">更新日志</div>
+				 2016-03-01
+                <ul>
+                    <li>Git游戏欢迎大家来玩.</li>
+					<li>游戏版权归原作者所有.</li>
+                </ul>
+                2015-09-18
+                <ul>
+                    <li>Removed stupid 20,000 bookcase achievement</li>
+                </ul>
+                2015-07-30
+                <ul>
+                    <li>点数升级: Shops buy your items for more gold.</li>
+                    <li>点数升级: Permanent attack cool-down reduction.</li>
+                    <li>点数升级: Health regeneration.</li>
+                    <li>点数升级: Spirit regeneration.</li>
+                </ul>
+                2015-07-28
+                <ul>
+                    <li>'power save mode': The game keeps track of whether or not it is currently visible, does not update the UI when not visible.</li>
+                    <li>错误修正: Found bug where ninja swift strike spell could get stuck in an enabled state, never letting the ninja out of the room.</li>
+                    <li>Added more simple achievements.</li>
+                </ul>
+                2015-07-26
+                <ul>
+                    <li>Instant loot spell earns adventure points for looting gold, potions, scrolls, items and finding rare items.</li>
+                    <li>Added upgrade for minimum monsters per room setting.</li>
+                    <li>Encounter notification panel displays current/total monster count.</li>
+                    <li>Boss monster level same as max party member level.</li>
+                </ul>
+                2015-07-25
+                <ul>
+                    <li>Changed upgrade buttons so that they will not reorder themselves strangely after being clicked.</li>
+                    <li>Potentially fixed party exploration bug where adventurers get stuck/separated. Hard to know if really fixed.</li>
+                    <li>Crowd controls spells (web, sleep, turn), never fail.</li>
+                </ul>
+                2015-07-24
+                <ul>
+                    <li>Increased gold drop upgrade amounts.</li>
+                    <li>Added fix for bug where the party somehow walks past the edge of the world.
+                        This really just fixes the result of a bug, rather than actually solving the issue
+                        of how the party manages to walk past the edge of the world in the first place.</li>
+                </ul>
+                2015-07-20
+                <ul>
+                    <li>Hopefully fixed the 'exit level without looting' bug.</li>
+                    <li>Hopefully fixed Windows 10 fast animation bug.</li>
+                    <li>Hopefully fixed negative play time bug.</li>
+                    <li>New point upgrades: Offline Time Bonus.</li>
+                    <li>Fixed continuation achievement bug.</li>
+                </ul>
+                2015-07-19
+                <ul>
+                    <li>Changed continuation faulty achievement logic.</li>
+                    <li>Number of monsters in encounter updated as they are killed.</li>
+                    <li>Possibly fixed the bug where adventurers leave castle without looting last room.</li>
+                    <li>New potion: Double gold drops. Dead monsters drop two piles of gold instead of one.</li>
+                    <li>New potion: Double item drops. Dead monsters drop two items instead of one.</li>
+                    <li>New potion: Random Treasure Rooms. Small chance of room being full of treasure.</li>
+                    <li>New potion: Random Boss Fights. Small chance of boss encounter.</li>
+                </ul>
+                2015-07-18
+                <ul>
+                    <li>Fixed stupid bug causing error message.</li>
+                    <li>Added AI to make characters not stand in door ways.</li>
+                    <li>Added option to display FPS.</li>
+                    <li>Small improvement to electromancer chain lightning (1 extra hop).</li>
+                </ul>
+                2015-07-17
+                <ul>
+                    <li>Added support for sprite render order, which fixes the issue where characters are always rendered on
+                        top of walls and tree and things that they are really supposed to be behind.</li>
+                    <li>Added ability to disable sprite render order.</li>
+                </ul>
+                2015-07-12
+                <ul>
+                    <li>Processed offline time added to play time statistics.</li>
+                    <li>Added option to disable inactive tab processing.</li>
+                    <li>Fixed 'Play With Smaller Party' achievements.</li>
+                    <li>More Minion Achievements.</li>
+                    <li>新的药剂: Frail Monsters.</li>
+                    <li>新的药剂: Auto Firing Scrolls.</li>
+                    <li>Additional Point Upgrade: Added another 'Cheaper Monster Levels' upgrade.</li>
+                    <li>New Point Upgrade: More Kills Per Farm.</li>
+                </ul>
+                2015-07-11
+                <ul>
+                    <li>New Adventure Point Upgrade: Potion Duration +15%</li>
+                    <li>Numpad support for scrolls</li>
+                    <li>Fixed achievement count bug in points tab.</li>
+                    <li>Fixed blank achievements bug on points tab.</li>
+                </ul>
+                2015-07-10
+                <ul>
+                    <li>New Adventure Point Upgrade: Cheaper Monster Levels</li>
+                    <li>新的药剂: Items dropped while potion is active are worth more gold.</li>
+                    <li>Tabs slightly less wide</li>
+                    <li>Fixed potion save bug, potions in unlocked slots should save properly now.</li>
+                    <li>Possible fix for the 'ninjas stuck in hallway' bug.</li>
+                </ul>
+                2015-07-09
+                <ul>
+                    <li>Fixed bug related to spending adventure points.</li>
+                    <li>Fixed 'redundant party' bug.</li>
+                    <li>Hopefully fixed 'repetitively switching back to game tab' bug.</li>
+                    <li>New potion: Docile Monsters (free kills, basically)</li>
+                    <li>New Upgrade: Min Gold Per Drop</li>
+                    <li>Upgraded Upgrade: 'Max Gold Per Drop' can be upgraded to higher value</li>
+                    <li>Number of spendable skill points displayed in tab.</li>
+                </ul>
+                2015-07-08
+                <ul>
+                    <li>Added adventure point upgrades so that you can spent those points.</li>
+                    <li>Unlockable potion slots.</li>
+                    <li>Unlockable character slot.</li>
+                    <li>Upgrade walking speed.</li>
+                    <li>Upgrade scroll stacking.</li>
+                    <li>Upgrade farm discount.</li>
+                </ul>
+                2015-07-05
+                <ul>
+                    <li>Game options saved.</li>
+                    <li>Game options lets you disable offline processing.</li>
+                    <li>Max offline processing time increased to 12 hours.</li>
+                    <li>Ninja balance adjustments to make him less feeble (new items will give better health and armor).</li>
+                    <li>New potion: More Kills Per Farm</li>
+                </ul>
+                2015-07-04
+                <ul>
+                    <li>Offline processing support added.</li>
+                    <li>Background tab support added (same as offline processing, really).</li>
+                </ul>
+                2015-07-03
+                <ul>
+                    <li>Ninja returns to original spot after swift strike.</li>
+                    <li>Electromancer chain lightning hits more monsters.</li>
+                    <li>Spell cool downs greatly reduced.</li>
+                </ul>
+                2015-07-02
+                <ul>
+                    <li>Added a few more achievements.</li>
+                    <li>Fixed an achievement bug.</li>
+                    <li>Added loot AI change so that characters do not attempt to loot the same things.</li>
+                </ul>
+                2015-07-01
+                <ul>
+                    <li>Added Achievements.</li>
+                    <li>Added Adventure Points.</li>
+                    <li>Removed cap on prestige skill points.</li>
+                </ul>
+                2015-06-23
+                <ul>
+                    <li>Added more statistics.</li>
+                    <li>Faster item gathering: adventurers help each other gather items.</li>
+                    <li>Faster item gathering: minions help gather items.</li>
+                    <li>错误修正: Level up buttons have names from previous party after reset.</li>
+                    <li>错误修正: Highlighted tab un-highlighted on reset.</li>
+                </ul>
+                2015-06-20
+                <ul>
+                    <li>Parties can have duplicate character classes.</li>
+                    <li>Parties can have less than 4 members.</li>
+                    <li>Minions harvest potions and scrolls.</li>
+                    <li>Minion positions NOT included when determining camera center. Too jerky.</li>
+                </ul>
+                2015-06-17
+                <ul>
+                    <li>Added scroll hot keys (1-6).</li>
+                    <li>Dungeon table includes castle name.</li>
+                    <li>Minion positions included when determining camera center.</li>
+                    <li>Graphics Options (disable text, effects and the map overlay).</li>
+                </ul>
+                2015-06-16
+                <ul>
+                    <li>Hopefully Fixed UI bug in adventurer status section.</li>
+                    <li>Summoners will not wait for combat to call upon their minions.</li>
+                    <li>错误修正: Infinite Scrolls potion should work for scrolls that had a count of 0.</li>
+                    <li>错误修正: Spell cost should never exceed max spirit of character.</li>
+                    <li>错误修正: Scrolls sometimes not clickable as soon as room is opened.</li>
+                    <li>Spider web spell should target monsters a little more randomly.</li>
+                </ul>
+                2015-06-15
+                <ul>
+                    <li>Removed potion queue concept, replaced it with simultaneous potion usage.</li>
+                    <li>Improved implementation of faster farming potion</li>
+                    <li>新的药剂: Faster Dungeon Infestation</li>
+                    <li>新的药剂: Infinite Scrolls (this one is cool)</li>
+                    <li>新的药剂: More Monsters (10 more monsters per room)</li>
+                    <li>新的药剂: 100% Item Drops (all monsters drop an item when killed)</li>
+                    <li>新的药剂: Potions Last Longer (meta potion that affects other potions)</li>
+                    <li>新的药剂: Free Spell Casting (spells cost no spirit)</li>
+                    <li>Small increase in walking speed.</li>
+                </ul>
+                2015-06-14
+                <ul>
+                    <li>Added character stats: stun count, minion kills, damage given, damage received.</li>
+                    <li>Gameplay adjustment: Stun effect removed at end of combat. The delay was pointless and had to go.</li>
+                    <li>错误修正: Active potion effect cleared when game is reset.</li>
+                    <li>Active potion can be dropped.</li>
+                    <li>Potions can be queued. </li>
+                    <li>Fighter will taunt if healthy, regardless of the situation of the other party members.</li>
+                </ul>
+                2015-06-13
+                <ul>
+                    <li>错误修正: Priest's revive spell woes.</li>
+                    <li>错误修正: Skill point bug after continuation.</li>
+                    <li>错误修正: Fighter taunt spell if there are no 'vulnerable' characters in the party.</li>
+                    <li>错误修正: Spells not able to be cast if party has continued after game victory.</li>
+                    <li>错误修正: Prevent loot from being dropped outside of room.</li>
+                    <li>Guardian ninjas in castles use Swift Strike ability on you.</li>
+                    <li>Added pause/resume button.</li>
+                    <li>Added new character class. Very silly and probably over powered.</li>
+                </ul>
+                2015-06-09
+                <ul>
+                    <li>Rogue prioritizes treasure chests over regular loot.</li>
+                    <li>Adventurers don't kill turned or disabled enemies unless there are no other enemies.</li>
+                    <li>Health bars are different colors for monsters, minions and adventurers.</li>
+                </ul>
+                2015-06-08
+                <ul>
+                    <li>Less confusing upgrades.</li>
+                    <li>Potions can be dropped.</li>
+                    <li>Fewer un-lootable treasure chests.</li>
+                </ul>
+                2015-06-07 (v. 1.0)
+                <ul>
+                    <li>Added new character classes.</li>
+                    <li>Added party creation screen.</li>
+                    <li>Add game over screen.</li>
+                    <li>Added prestige.</li>
+                    <li>Added scrolls to let the player kill monsters.</li>
+                    <li>Added potions to enable various bonuses.</li>
+                    <li>Added treasure chests, weapon racks and book cases.</li>
+                    <li>Added castles and regions.</li>
+                    <li>Added Bosses and castle guardians.</li>
+                    <li>Lots of skill tree changes.</li>
+                    <li>Replaced item quality concept with item rarity, no upper limit on item upgrades.</li>
+                    <li>Replaced monster tier concept with monster level, no upper limit on monster upgrades.</li>
+                    <li>Characters are stunned for a period when their health reaches 0.</li>
+                    <li>Added statistics to info tab.</li>
+                </ul>
+                2015-03-15
+                <ul>
+                    <li>Fixed critical hit chance bug.</li>
+                    <li>Priest buffs and fighter taunt take effect immediately rather than after the animation finishes.</li>
+                    <li>Upgrade buttons will no longer switch under your mouse. New upgrades show up below existing upgrades.</li>
+                    <li>New Fighter skills related to multiple attacks.</li>
+                </ul>
+                2015-03-14
+                <ul>
+                    <li>Added taunt skill for the fighter.</li>
+                    <li>Added critical hit skills for the fighter.</li>
+                    <li>Fixed stupid monster retirement bug for the third time.</li>
+                </ul>
+                2015-03-10
+                <ul>
+                    <li>Adventurers don't wander into a group of monsters to pick up loot.</li>
+                    <li>The wizard and ranger try to keep their distance from monsters.</li>
+                </ul>
+                2015-03-09
+                <ul>
+                    <li>Hopefully fixing a negative farming percentage bug that some people reported.</li>
+                </ul>
+                2015-03-08
+                <ul>
+                    <li>Fixed monster retirement bug that let you retire all the monsters.</li>
+                    <li>Fixed farming progress bug when reloading from a save.</li>
+                    <li>Fixed '删除存档' bug.</li>
+                    <li>The wizard gets a spell right at the start.</li>
+                    <li>Monsters slightly less powerful in early levels.</li>
+                    <li>Item power scaled back a bit.</li>
+                    <li>Priest healing spell is more powerful.</li>
+                    <li>Monster tiers cost a lot more.</li>
+                    <li>All monster tiers other than Titanic can be retired.</li>
+                </ul>
+                2015-03-06
+                <ul>
+                    <li>Item equip button displays change in value rather than absolute value.</li>
+                    <li>Balance adjustment: Characters need more XP to go up levels.</li>
+                    <li>Balance adjustment: Monsters give less XP when killed.</li>
+                    <li>Balance adjustment: Monsters characteristics.</li>
+                    <li>Balance adjustment: Dungeons cost more gold.</li>
+                    <li>Balance adjustment: Items are worth less gold and are less powerful.</li>
+                    <li>Balance adjustment: Priest buffs are less powerful.</li>
+                    <li>Fixed annoying skill point '*' bug.</li>
+                    <li>Fixed monster retirement bug. (and then, fixed it again)</li>
+                </ul>
+                2015-03-02
+                <ul>
+                    <li>Fixed disappearing upgrade button bug.</li>
+                    <li>Added monster stat info to the monster upgrade button.</li>
+                </ul>
+                2015-03-01
+                <ul>
+                    <li>Castles farm dungeons and earn your party kills.</li>
+                    <li>Added attack rating and defence rating characteristics.</li>
+                    <li>Reworked combat math to use attack/defence ratings.</li>
+                    <li>Changed around UI to consolidate character class information under one tab.</li>
+                    <li>Kills based upgrades are disabled when their max value is reached.</li>
+                    <li>Greyed out upgrade buttons should not be sorted above an available upgrade.</li>
+                    <li>Removed unbalanced health and spirit regeneration effects.</li>
+                    <li>Re-characterized some item types so that characters don't compete for items.</li>
+                    <li>Big change to how items work, junk items will never be equipped over better items.</li>
+                    <li>Added item shops so your adventurers can unload their junk for gold.</li>
+                    <li>Lots of skill tree changes.</li>
+                </ul>
+                2015-01-22
+                <ul>
+                    <li>Fixed bug that caused wimpy monster tiers to be un-retired.</li>
+                    <li>If there are no infested dungeons to clear, a cleared, unsecured dungeon will be re-infested.</li>
+                </ul>
+                2015-01-19
+                <ul>
+                    <li>Fixed FOREBODING monster bug.</li>
+                    <li>Fixed arrow damage color bug on inventory screen.</li>
+                    <li>Fixed item effect bug on inventory screen.</li>
+                </ul>
+                2015-01-18
+                <ul>
+                    <li>Added counts to dungeon tabs.</li>
+                    <li>Cheaper castles.</li>
+                    <li>Fixed reset bug where party would not re-enter some dungeons from the previous game.</li>
+                </ul>
+                2015-01-17
+                <ul>
+                    <li>Fixed effect cell bug on inventory panel.</li>
+                    <li>Started adding 'decorations' to dungeon rooms.</li>
+                    <li>Fixed dungeon selection bug causing the party to get stuck.</li>
+                    <li>Added tab for dungeons that have had their castle purchased. </li>
+                    <li>Fixed bug where party magically enters far away dungeon sometimes. </li>
+                </ul>
+                2015-01-14
+                <ul>
+                    <li>Added a way to spend gold - you buy castles to secure dungeons. </li>
+                    <li>Added dungeon tab to keep track of the dungeons. </li>
+                    <li>Fixed bug where party gets too separated when traveling overland. </li>
+                    <li>Fixed bug upgrade buttons have blue border for no reason. </li>
+                </ul>
+            </div>
+
+            <div id="information" class="infoTabInfo">
+				<a href="http://www.u77.com/" target="_blank"><img src="U77logo.png" ></a>
+				<br/>
+				<a href="http://shang.qq.com/wpa/qunwpa?idkey=73eb5a82f38f3d8f551a5729f21250ea2e3a28489765b053e4ff3f3263301fa0/" target="_blank"><img src="lylogo.png" ></a>
+				<br/>
+                <b>攻击等级与防御等级</b>
+                <p>
+                    攻击等级和防御等级决定了一次攻击是否成功.
+                    如果低攻击等级与高防御等级进行战斗,那么命中率将会很低.
+                </p>
+                <b>伤害与护甲</b>
+                <p>
+                    伤害和护甲决定成功攻击后造成的伤害.
+					如果低伤害击中高护甲,那么损失的生命值将会很低.
+                </p>
+                <b>致命一击</b>
+                <p>
+                    当打出暴击时,怪物的护甲将被忽略,怪物将受到完全的伤害.
+                </p>
+                <b>昏迷</b>
+                <p>
+                    当角色的生命值被清空,并不会死去,他们将会昏迷一段时间.
+                    昏迷的角色将不能进行战斗,同时也不会被怪物攻击.
+                </p>
+                <b>潜行</b>
+                <p>
+                    当角色进入潜行,怪物不会攻击他,并且潜行攻击成功率很高.
+                </p>
+                <b>回合</b>
+                <p>
+                    本游戏是基于回合制的.1秒4个回合.在每个回合,所有角色都会决定这个会和自己要干什么.
+                </p>
+                <b>冷却</b>
+                <p>
+                    每次攻击后,角色必须等待一定的回合才能进行下次攻击.
+                    同样的,每次施放法术也必须等待一定的回合才能施放第二次.
+                    这有助于防止角色被循环技能卡死.
+                </p>
+                <b>生命/法力回复</b>
+                <p>
+                    生命和法力会缓慢恢复.每3个回合回复一次.
+                </p>
+                <b>地牢农场</b>
+                <p>
+                    一旦一个地牢被清理,你可以花费黄金将地牢转变为农场,
+                    每过一段时间你会自动获得杀戮值.
+                </p>
+                <b>冒险点数</b>
+                <p>
+                    如果你做到了要求的冒险行为,就会获得点数奖励.使用点数可以做很多事情你可以看着它逐渐增多,
+                    你可以向你的朋友吹嘘它,你可以去网上那个对这个发表评论.这有许多事可说.
+                </p>
+                <b>游戏目的</b>
+                <p>
+                    本游戏的最终目的是攻陷所有的城堡并结束永恒之冬的诅咒.
+                </p>
+            </div>
+
+            <div id="contactInfo" class="infoTabMinmaxiaLinks">
+                <div class="sectionTitle">末日危机链接</div>
+
+                <div style="margin-top:5px;">
+                    <a href="mailto:contact@minmaxia.com">contact@minmaxia.com</a> - Email me your comments, criticisms, ideas, bug reports, etc.
+                    <br/>
+                    <a href="http://www.minmaxia.com" target="_blank">MINMAXIA</a> - WebGL project.
+                    <br/>
+                    <a href="http://www.minmaxia.com/clickpocalypse" target="_blank">CLICKPOCALYPSE</a> - The original game. Pure monster killing with no pesky graphics to get in the way.
+                    <br/>
+                    <a href="http://www.reddit.com/r/CLICKPOCALYPSE/" target="_blank">/r/CLICKPOCALYPSE</a> - Check out CLICKPOCALYPSE on Reddit. Post stuff here to gain precious karma.
+                    <br/>
+                    <a href="http://www.reddit.com/r/incremental_games/" target="_blank">/r/incremental_games</a> - A great community on Reddit for games like this. Lots of new games show up here.
+                </div>
+            </div>
+            <div id="gameOptionsContainer" class="infoTabGameOptions">
+                <form>
+                    <div class="sectionTitle">画面渲染选项</div>
+                    <div>
+                        <input id="infoTextEnabledCheckbox" type="checkbox"/> <label for="infoTextEnabledCheckbox">文字效果渲染</label>
+                        <br/>
+                        <input id="spellEffectsEnabledCheckbox" type="checkbox"/> <label for="spellEffectsEnabledCheckbox">法术效果渲染</label>
+                        <br/>
+                        <input id="mapOverlayEnabledCheckbox" type="checkbox"/> <label for="mapOverlayEnabledCheckbox">地图叠加渲染</label>
+                        <br/>
+                        <input id="spriteRenderOrderEnabledCheckbox" type="checkbox"/> <label for="spriteRenderOrderEnabledCheckbox">精灵顺序渲染</label>
+                        <br/>
+                        <input id="fpsVisibleCheckbox" type="checkbox"/> <label for="fpsVisibleCheckbox">显示每秒帧数</label>
+                        <br/>
+                    </div>
+                    <div class="sectionTitle" style="margin-top:10px;">游戏选项</div>
+                    <div>
+                        <input id="offlineProcessingEnabledCheckbox" type="checkbox"/> <label for="offlineProcessingEnabledCheckbox">启用离线收益</label>
+                    </div>
+                    <div>
+                        <input id="inactiveTabProcessingEnabledCheckbox" type="checkbox"/> <label for="inactiveTabProcessingEnabledCheckbox">游戏可后台运行</label>
+                    </div>
+                </form>
+            </div>
+            <div id="gameCredits" class="infoTabGameCredits">
+                <div class="sectionTitle">
+                    图形制作组
+                </div>
+
+                <div style="margin-top:5px;">
+                    All tiles have been drawn by David E. Gervais, and are published under the <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">Creative Commons licence</a>.
+                    <br/>
+                    注意: There's been at least one tiny change made to the tiles.
+                    <br/>
+                    The tiles can be downloaded here: <a href="http://pousse.rapiere.free.fr/tome/" target="_blank">http://pousse.rapiere.free.fr/tome/</a>
+                    <br/>
+                    The tiles were originally created for <a href="http://www.malfador.com/domain.html" target="_blank">Dungeon Odyssey</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="c2.js?ver=20150918"></script>
+<!--客服 开始-->
+<script src="https://cdn.jsdelivr.net/gh/g8hh/g8hh.github.io/static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/g8hh/g8hh.github.io/static/css/kf.css" type="text/css" media="screen" charset="utf-8">
+<script src="https://cdn.jsdelivr.net/gh/g8hh/g8hh.github.io/static/js/kf.js"></script>
+<!-- 客服 结束 -->
+<!-- Start up the game when the page loads. -->
+<script type="text/javascript">
+    // Initialize things when the window has finished loading.
+    window.onload = function () {
+        Game.onLoad(document);
+    };
+        $("#loadJB").click(function() {
+    console.log("脚本已启用")
+        $("#loadJB").remove()
+    document.body.appendChild(document.createElement('script')).src = 'c2c.user.js';
+    });
+
+</script>
+<!--站长统计-->
+    <div style="display: none">
+        <script type="text/javascript" src="//s19.cnzz.com/z_stat.php?id=1267958737&web_id=1267958737"></script>
+    </div>
+    <style>
+        body,.disabledCharacterSelectionButton,.upgradeButton:hover,.itemRarityCommon,.disabledCharacterSelectionButton{
+            background: #fff;
+            color: #000;
+        }
+        .lockedCharacterSelectionTable,.gameTabLockedAdventurerInfo,.potionButtonLocked,.tabMenu .selectedTab a,.scrollButton,.partySelectionHeaderSpan,.characteristicsHeaderSpan,.monsterUpgradesHeaderSpan,.pointUpgradesHeaderSpan,.pointsBreakdownHeaderSpan,.achievementsHeaderSpan,.moveUpButton,.disabledMoveDownButton,.deselectCharacterButton,.moveDownButton,.disabledMoveUpButton,.lockedCharacterSelectionTable, .gameTabLockedAdventurerInfo, .potionButtonLocked, .tabMenu .selectedTab a, .scrollButton, .partySelectionHeaderSpan, .characteristicsHeaderSpan, .monsterUpgradesHeaderSpan, .pointUpgradesHeaderSpan, .pointsBreakdownHeaderSpan, .achievementsHeaderSpan, .moveUpButton, .disabledMoveDownButton, .deselectCharacterButton,.deselectCharacterButton:hover,.moveDownButton:hover,.moveUpButton:hover,.scrollButton:hover,.saveButton:hover,.ownedUpgradeButton,.potionButton,.dropPotionButton,.potionButton:hover,.dropPotionButton:hover{
+            
+            background: #ccc;
+            color: #000;
+        }
+    </style>
+</body>
+</html>
